@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>Websites That Sell While You Sleep — Virtual Key Solutions</title>
+    <meta name="description" content="Explore our custom website design and digital marketing services built to generate real results. From structural audits to full builds, every solution is engineered for growth.">
+    <meta name="keywords" content="custom website design company, web design and development services, digital marketing services, website design packages, custom website design agency">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '2f630763-3b32-4a49-8405-fa46469400d3',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="Websites That Sell While You Sleep — Virtual Key Solutions">
+    <meta property="og:description" content="Explore our custom website design and digital marketing services built to generate real results. From structural audits to full builds, every solution is engineered for growth.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Websites That Sell While You Sleep — Virtual Key Solutions">
+    <meta name="twitter:description" content="Explore our custom website design and digital marketing services built to generate real results. From structural audits to full builds, every solution is engineered for growth.">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+    <script>window.ZAPPY_WEBSITE_ID = "2f630763-3b32-4a49-8405-fa46469400d3"; window.ZAPPY_API_BASE = "https://api.zappy5.com";</script>
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-light) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-light) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-light) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+  <nav class="navbar">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-services-image-1.webp" alt="Virtual Key Solutions"></a>
+    </div>
+
+    <ul class="nav-menu" id="navMenu"><li><a href="/">Home</a></li><li><a href="/services">Services</a></li><li><a href="/why-us">Why Us</a></li></ul>
+
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">Contact</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-light)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section class="services-intro-section" data-layout-spec="Services-intro">
+  <!-- Muted grid texture overlay -->
+  <div class="services-intro-grid-bg" aria-hidden="true"></div>
+
+  <div class="services-intro-container">
+
+    <!-- Centered title area -->
+    <div class="services-intro-header">
+      <div class="services-intro-eyebrow">
+        <span class="services-intro-lot-tag">LOT: 001</span>
+        <span class="services-intro-divider-dot"></span>
+        <span class="services-intro-eyebrow-text">Service Ecosystem</span>
+      </div>
+      <h2 class="services-intro-title">Digital Infrastructure<br><em class="services-intro-title-accent">Engineered for Growth</em></h2>
+      <div class="services-intro-rule" aria-hidden="true"></div>
+    </div>
+
+    <!-- Two-column body -->
+    <div class="services-intro-body">
+
+      <!-- START: Agency promise copy -->
+      <div class="services-intro-copy">
+        <p class="services-intro-lead">Your website is not a brochure. It is a business asset — a 24/7 salesperson that should be generating calls, capturing leads, and converting visitors into paying customers from the moment it goes live.</p>
+        <p class="services-intro-body-text">At Virtual Key Solutions, every custom website design service we deliver is engineered from the ground up as a revenue-producing property. We apply the same discipline a structural architect brings to a building: clear foundations, load-bearing functionality, and a layout designed to guide every visitor toward a decision.</p>
+        <p class="services-intro-body-text">We partner with local and service businesses who are done with decorative websites that look fine but fail where it matters — in calls, bookings, and growth. Our custom website design agency approach treats your online presence as prime digital real estate, built to perform in your market.</p>
+        <div class="services-intro-cta-row">
+          <a href="/contact" class="services-intro-btn-primary">Start Your Build</a>
+          <a href="/services" class="services-intro-btn-secondary">Explore Services</a>
+        </div>
+      </div>
+
+      <!-- END: Blueprint diagram panel -->
+      <div class="services-intro-blueprint-panel">
+        <!-- Blueprint SVG composition -->
+        <svg class="services-intro-blueprint-svg" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 560 420" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <!-- Background panel -->
+          <rect width="560" height="420" fill="#0B1F5B" rx="4"></rect>
+          <!-- Fine grid lines -->
+          <g stroke="rgba(201,162,74,0.12)" stroke-width="0.75">
+            <line x1="0" y1="28" x2="560" y2="28"></line>
+            <line x1="0" y1="56" x2="560" y2="56"></line>
+            <line x1="0" y1="84" x2="560" y2="84"></line>
+            <line x1="0" y1="112" x2="560" y2="112"></line>
+            <line x1="0" y1="140" x2="560" y2="140"></line>
+            <line x1="0" y1="168" x2="560" y2="168"></line>
+            <line x1="0" y1="196" x2="560" y2="196"></line>
+            <line x1="0" y1="224" x2="560" y2="224"></line>
+            <line x1="0" y1="252" x2="560" y2="252"></line>
+            <line x1="0" y1="280" x2="560" y2="280"></line>
+            <line x1="0" y1="308" x2="560" y2="308"></line>
+            <line x1="0" y1="336" x2="560" y2="336"></line>
+            <line x1="0" y1="364" x2="560" y2="364"></line>
+            <line x1="0" y1="392" x2="560" y2="392"></line>
+            <line x1="28" y1="0" x2="28" y2="420"></line>
+            <line x1="56" y1="0" x2="56" y2="420"></line>
+            <line x1="84" y1="0" x2="84" y2="420"></line>
+            <line x1="112" y1="0" x2="112" y2="420"></line>
+            <line x1="140" y1="0" x2="140" y2="420"></line>
+            <line x1="168" y1="0" x2="168" y2="420"></line>
+            <line x1="196" y1="0" x2="196" y2="420"></line>
+            <line x1="224" y1="0" x2="224" y2="420"></line>
+            <line x1="252" y1="0" x2="252" y2="420"></line>
+            <line x1="280" y1="0" x2="280" y2="420"></line>
+            <line x1="308" y1="0" x2="308" y2="420"></line>
+            <line x1="336" y1="0" x2="336" y2="420"></line>
+            <line x1="364" y1="0" x2="364" y2="420"></line>
+            <line x1="392" y1="0" x2="392" y2="420"></line>
+            <line x1="420" y1="0" x2="420" y2="420"></line>
+            <line x1="448" y1="0" x2="448" y2="420"></line>
+            <line x1="476" y1="0" x2="476" y2="420"></line>
+            <line x1="504" y1="0" x2="504" y2="420"></line>
+            <line x1="532" y1="0" x2="532" y2="420"></line>
+          </g>
+          <!-- Building silhouette 1 - tall tower -->
+          <rect x="60" y="160" width="72" height="220" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.4)" stroke-width="1.5"></rect>
+          <!-- Roof silhouette 1 - peaked -->
+          <polygon points="60,160 96,110 132,160" fill="rgba(201,162,74,0.12)" stroke="rgba(201,162,74,0.5)" stroke-width="1.5"></polygon>
+          <!-- Windows grid - building 1 -->
+          <g fill="rgba(201,162,74,0.25)">
+            <rect x="72" y="175" width="14" height="14"></rect>
+            <rect x="96" y="175" width="14" height="14"></rect>
+            <rect x="72" y="200" width="14" height="14"></rect>
+            <rect x="96" y="200" width="14" height="14"></rect>
+            <rect x="72" y="225" width="14" height="14"></rect>
+            <rect x="96" y="225" width="14" height="14"></rect>
+            <rect x="72" y="250" width="14" height="14"></rect>
+            <rect x="96" y="250" width="14" height="14"></rect>
+            <rect x="72" y="275" width="14" height="14"></rect>
+            <rect x="96" y="275" width="14" height="14"></rect>
+          </g>
+          <!-- Building silhouette 2 - mid -->
+          <rect x="160" y="210" width="90" height="170" fill="rgba(201,162,74,0.06)" stroke="rgba(201,162,74,0.35)" stroke-width="1.5"></rect>
+          <!-- Roof silhouette 2 - flat with parapet -->
+          <rect x="155" y="200" width="100" height="14" fill="rgba(201,162,74,0.1)" stroke="rgba(201,162,74,0.45)" stroke-width="1.5"></rect>
+          <!-- Windows grid - building 2 -->
+          <g fill="rgba(201,162,74,0.2)">
+            <rect x="172" y="225" width="18" height="14"></rect>
+            <rect x="200" y="225" width="18" height="14"></rect>
+            <rect x="228" y="225" width="18" height="14"></rect>
+            <rect x="172" y="252" width="18" height="14"></rect>
+            <rect x="200" y="252" width="18" height="14"></rect>
+            <rect x="228" y="252" width="18" height="14"></rect>
+            <rect x="172" y="279" width="18" height="14"></rect>
+            <rect x="200" y="279" width="18" height="14"></rect>
+            <rect x="228" y="279" width="18" height="14"></rect>
+          </g>
+          <!-- Building silhouette 3 - short wide -->
+          <rect x="290" y="250" width="110" height="130" fill="rgba(201,162,74,0.05)" stroke="rgba(201,162,74,0.3)" stroke-width="1.5"></rect>
+          <!-- Roof silhouette 3 - arch -->
+          <path d="M290,250 Q345,215 400,250" fill="rgba(201,162,74,0.08)" stroke="rgba(201,162,74,0.4)" stroke-width="1.5"></path>
+          <!-- Windows - building 3 -->
+          <g fill="rgba(201,162,74,0.18)">
+            <rect x="305" y="265" width="20" height="16"></rect>
+            <rect x="337" y="265" width="20" height="16"></rect>
+            <rect x="369" y="265" width="20" height="16"></rect>
+            <rect x="305" y="294" width="20" height="16"></rect>
+            <rect x="337" y="294" width="20" height="16"></rect>
+            <rect x="369" y="294" width="20" height="16"></rect>
+          </g>
+          <!-- Building 4 - slim tower right -->
+          <rect x="430" y="180" width="52" height="200" fill="rgba(201,162,74,0.07)" stroke="rgba(201,162,74,0.35)" stroke-width="1.5"></rect>
+          <!-- Roof 4 - pointed spire -->
+          <polygon points="430,180 456,130 482,180" fill="rgba(201,162,74,0.1)" stroke="rgba(201,162,74,0.45)" stroke-width="1.5"></polygon>
+          <line x1="456" y1="130" x2="456" y2="115" stroke="rgba(201,162,74,0.6)" stroke-width="1.5"></line>
+          <circle cx="456" cy="112" r="4" fill="rgba(201,162,74,0.7)"></circle>
+          <!-- Windows - building 4 -->
+          <g fill="rgba(201,162,74,0.22)">
+            <rect x="440" y="196" width="12" height="12"></rect>
+            <rect x="460" y="196" width="12" height="12"></rect>
+            <rect x="440" y="220" width="12" height="12"></rect>
+            <rect x="460" y="220" width="12" height="12"></rect>
+            <rect x="440" y="244" width="12" height="12"></rect>
+            <rect x="460" y="244" width="12" height="12"></rect>
+            <rect x="440" y="268" width="12" height="12"></rect>
+            <rect x="460" y="268" width="12" height="12"></rect>
+          </g>
+          <!-- Ground baseline -->
+          <line x1="40" y1="380" x2="520" y2="380" stroke="rgba(201,162,74,0.5)" stroke-width="1.5"></line>
+          <!-- Plot markers along baseline -->
+          <g stroke="rgba(201,162,74,0.5)" stroke-width="1.5">
+            <line x1="60" y1="375" x2="60" y2="385"></line>
+            <line x1="132" y1="375" x2="132" y2="385"></line>
+            <line x1="160" y1="375" x2="160" y2="385"></line>
+            <line x1="250" y1="375" x2="250" y2="385"></line>
+            <line x1="290" y1="375" x2="290" y2="385"></line>
+            <line x1="400" y1="375" x2="400" y2="385"></line>
+            <line x1="430" y1="375" x2="430" y2="385"></line>
+            <line x1="482" y1="375" x2="482" y2="385"></line>
+          </g>
+          <!-- Central key-circle motif -->
+          <circle cx="280" cy="70" r="36" stroke="rgba(201,162,74,0.55)" stroke-width="1.5" fill="none"></circle>
+          <circle cx="280" cy="70" r="26" stroke="rgba(201,162,74,0.3)" stroke-width="1" fill="none"></circle>
+          <!-- Key bow -->
+          <circle cx="280" cy="60" r="10" stroke="rgba(201,162,74,0.7)" stroke-width="1.5" fill="none"></circle>
+          <!-- Key blade -->
+          <line x1="280" y1="70" x2="280" y2="95" stroke="rgba(201,162,74,0.7)" stroke-width="1.5"></line>
+          <line x1="280" y1="82" x2="290" y2="82" stroke="rgba(201,162,74,0.7)" stroke-width="1.5"></line>
+          <line x1="280" y1="90" x2="287" y2="90" stroke="rgba(201,162,74,0.7)" stroke-width="1.5"></line>
+          <!-- Radar rings from key -->
+          <circle cx="280" cy="70" r="50" stroke="rgba(201,162,74,0.12)" stroke-width="1" fill="none"></circle>
+          <circle cx="280" cy="70" r="65" stroke="rgba(201,162,74,0.08)" stroke-width="1" fill="none"></circle>
+          <!-- Dimension lines -->
+          <g stroke="rgba(201,162,74,0.3)" stroke-width="0.75" stroke-dasharray="4 3">
+            <line x1="40" y1="160" x2="55" y2="160"></line>
+            <line x1="40" y1="380" x2="55" y2="380"></line>
+            <line x1="47" y1="160" x2="47" y2="380"></line>
+            <line x1="43" y1="160" x2="51" y2="160"></line>
+            <line x1="43" y1="380" x2="51" y2="380"></line>
+          </g>
+          <!-- Label text -->
+          <text x="18" y="275" font-family="Manrope, sans-serif" font-size="9" fill="rgba(201,162,74,0.5)" transform="rotate(-90, 18, 275)" text-anchor="middle" letter-spacing="1.5">HEIGHT: 220px</text>
+          <text x="96" y="398" font-family="Manrope, sans-serif" font-size="8" fill="rgba(201,162,74,0.45)" text-anchor="middle" letter-spacing="1">LOT A</text>
+          <text x="205" y="398" font-family="Manrope, sans-serif" font-size="8" fill="rgba(201,162,74,0.45)" text-anchor="middle" letter-spacing="1">LOT B</text>
+          <text x="345" y="398" font-family="Manrope, sans-serif" font-size="8" fill="rgba(201,162,74,0.45)" text-anchor="middle" letter-spacing="1">LOT C</text>
+          <text x="456" y="398" font-family="Manrope, sans-serif" font-size="8" fill="rgba(201,162,74,0.45)" text-anchor="middle" letter-spacing="1">LOT D</text>
+          <!-- Corner registration marks -->
+          <g stroke="rgba(201,162,74,0.4)" stroke-width="1" fill="none">
+            <path d="M16,16 L16,28 M16,16 L28,16"></path>
+            <path d="M544,16 L544,28 M544,16 L532,16"></path>
+            <path d="M16,404 L16,392 M16,404 L28,404"></path>
+            <path d="M544,404 L544,392 M544,404 L532,404"></path>
+          </g>
+          <!-- Top label bar -->
+          <rect x="0" y="0" width="560" height="20" fill="rgba(201,162,74,0.06)"></rect>
+          <text x="16" y="13" font-family="Manrope, sans-serif" font-size="7.5" fill="rgba(201,162,74,0.6)" letter-spacing="2" text-transform="uppercase">VIRTUAL KEY SOLUTIONS // DIGITAL INFRASTRUCTURE PLAN</text>
+          <text x="490" y="13" font-family="Manrope, sans-serif" font-size="7.5" fill="rgba(201,162,74,0.6)" letter-spacing="1">REV. 1.0</text>
+        </svg>
+
+        <!-- Blueprint caption -->
+        <div class="services-intro-blueprint-caption">
+          <span class="services-intro-blueprint-label">STRUCTURAL PLAN</span>
+          <span class="services-intro-blueprint-sub">Digital Real Estate Architecture</span>
+        </div>
+      </div>
+
+    </div>
+    <!-- End two-column body -->
+
+  </div>
+  <!-- End container -->
+
+  <!-- Bottom gold rule divider with plot markers -->
+  <div class="services-intro-bottom-rule" aria-hidden="true">
+    <div class="services-intro-rule-line"></div>
+    <div class="services-intro-plot-markers">
+      <span class="services-intro-plot-marker"></span>
+      <span class="services-intro-plot-marker services-intro-plot-marker--diamond"></span>
+      <span class="services-intro-plot-marker"></span>
+      <span class="services-intro-plot-marker services-intro-plot-marker--diamond"></span>
+      <span class="services-intro-plot-marker"></span>
+      <span class="services-intro-plot-marker services-intro-plot-marker--diamond"></span>
+      <span class="services-intro-plot-marker"></span>
+      <span class="services-intro-plot-marker services-intro-plot-marker--diamond"></span>
+      <span class="services-intro-plot-marker"></span>
+    </div>
+  </div>
+
+</section>
+
+<section class="services-capabilities-section" data-layout-spec="Services-capabilities">
+  <!-- Section Header -->
+  <div class="services-capabilities-section .scs-container">
+    <div class="scs-container">
+      <div class="scs-header">
+        <div class="scs-label">
+          <span class="scs-lot-code">LOT: 003 // SERVICE SCHEDULE</span>
+        </div>
+        <h2 class="scs-heading">Everything You Need<br>to Win Online</h2>
+        <p class="scs-subheading">Modern digital infrastructure designed to help your business stand out, earn trust, and generate more customers online.</p>
+      </div>
+
+      <!-- 2x3 Service Grid -->
+      <div class="scs-grid">
+
+        <!-- Card A-01 -->
+        <article class="scs-card">
+          <div class="scs-card-corner scs-card-corner--tl"></div>
+          <div class="scs-card-corner scs-card-corner--tr"></div>
+          <div class="scs-card-inner">
+            <div class="scs-card-top">
+              <span class="scs-service-code">A-01</span>
+              <div class="scs-icon-wrap">
+                <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"></rect><path d="M3 9h18"></path><path d="M9 21V9"></path></svg>
+              </div>
+            </div>
+            <h3 class="scs-card-title">Custom Website Design</h3>
+            <p class="scs-card-body">Professional websites engineered to reflect your brand identity, communicate your value instantly, and build the credibility that converts first-time visitors into paying customers. Every custom website design we deliver is built from the ground up — no templates, no shortcuts.</p>
+            <div class="scs-card-footer">
+              <div class="scs-gold-rule" aria-hidden="true"></div>
+              <span class="scs-value-statement">Strong first impressions that build lasting trust.</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card A-02 -->
+        <article class="scs-card">
+          <div class="scs-card-corner scs-card-corner--tl"></div>
+          <div class="scs-card-corner scs-card-corner--tr"></div>
+          <div class="scs-card-inner">
+            <div class="scs-card-top">
+              <span class="scs-service-code">A-02</span>
+              <div class="scs-icon-wrap">
+                <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"></rect><path d="M12 18h.01"></path></svg>
+              </div>
+            </div>
+            <h3 class="scs-card-title">Mobile Optimization</h3>
+            <p class="scs-card-body">Built to perform seamlessly across phones, tablets, and desktops. Over 60% of your customers are browsing on mobile — a slow or broken mobile experience costs you real calls and real revenue. We ensure every interaction is fast, fluid, and frictionless on every screen size.</p>
+            <div class="scs-card-footer">
+              <div class="scs-gold-rule" aria-hidden="true"></div>
+              <span class="scs-value-statement">More calls and inquiries from mobile visitors.</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card A-03 -->
+        <article class="scs-card">
+          <div class="scs-card-corner scs-card-corner--tl"></div>
+          <div class="scs-card-corner scs-card-corner--tr"></div>
+          <div class="scs-card-inner">
+            <div class="scs-card-top">
+              <span class="scs-service-code">A-03</span>
+              <div class="scs-icon-wrap">
+                <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+              </div>
+            </div>
+            <h3 class="scs-card-title">Lead Generation Systems</h3>
+            <p class="scs-card-body">Your website should work as your best salesperson — 24 hours a day, 7 days a week. We design and integrate strategic lead capture systems including contact forms, click-to-call prompts, and inquiry funnels that automatically route potential customers directly to your business.</p>
+            <div class="scs-card-footer">
+              <div class="scs-gold-rule" aria-hidden="true"></div>
+              <span class="scs-value-statement">Automated inquiries captured around the clock.</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card A-04 -->
+        <article class="scs-card">
+          <div class="scs-card-corner scs-card-corner--tl"></div>
+          <div class="scs-card-corner scs-card-corner--tr"></div>
+          <div class="scs-card-inner">
+            <div class="scs-card-top">
+              <span class="scs-service-code">A-04</span>
+              <div class="scs-icon-wrap">
+                <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path><path d="M2 12h20"></path></svg>
+              </div>
+            </div>
+            <h3 class="scs-card-title">Local Search Visibility</h3>
+            <p class="scs-card-body">Dominate your digital location. We optimize your web presence so your business appears prominently when local customers search for the services you offer. From on-page SEO to Google Business Profile alignment, we put your business on the map — literally and strategically.</p>
+            <div class="scs-card-footer">
+              <div class="scs-gold-rule" aria-hidden="true"></div>
+              <span class="scs-value-statement">Found first by the customers who matter most.</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card A-05 -->
+        <article class="scs-card">
+          <div class="scs-card-corner scs-card-corner--tl"></div>
+          <div class="scs-card-corner scs-card-corner--tr"></div>
+          <div class="scs-card-inner">
+            <div class="scs-card-top">
+              <span class="scs-service-code">A-05</span>
+              <div class="scs-icon-wrap">
+                <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              </div>
+            </div>
+            <h3 class="scs-card-title">Speed &amp; Performance</h3>
+            <p class="scs-card-body">A slow website loses customers before they ever read your offer. We conduct structural performance audits and implement technical optimizations — image compression, code efficiency, server response tuning — so your site loads fast, ranks higher, and keeps visitors engaged from the first second.</p>
+            <div class="scs-card-footer">
+              <div class="scs-gold-rule" aria-hidden="true"></div>
+              <span class="scs-value-statement">Faster load times that keep visitors from leaving.</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card A-06 -->
+        <article class="scs-card">
+          <div class="scs-card-corner scs-card-corner--tl"></div>
+          <div class="scs-card-corner scs-card-corner--tr"></div>
+          <div class="scs-card-inner">
+            <div class="scs-card-top">
+              <span class="scs-service-code">A-06</span>
+              <div class="scs-icon-wrap">
+                <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </div>
+            </div>
+            <h3 class="scs-card-title">Hosting &amp; Security</h3>
+            <p class="scs-card-body">Your digital real estate needs a solid foundation. We provide managed hosting and security infrastructure that keeps your site online, protected, and performing reliably — 365 days a year. SSL certificates, malware monitoring, and regular backups ensure long-term business continuity.</p>
+            <div class="scs-card-footer">
+              <div class="scs-gold-rule" aria-hidden="true"></div>
+              <span class="scs-value-statement">Rock-solid reliability that protects your reputation.</span>
+            </div>
+          </div>
+        </article>
+
+      </div>
+      <!-- End Grid -->
+
+    </div>
+  </div>
+
+  <!-- Bottom Divider: deep navy diagonal shelf edge with glow line -->
+  <div class="scs-divider-wrapper">
+    <div class="scs-glow-line" aria-hidden="true"></div>
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,90 L0,28 L1200,0 L1200,90 Z" fill="#0B1220"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section class="services-process-section" data-layout-spec="Services-process">
+
+  <!-- City-grid texture overlay -->
+  <div class="services-process-section__city-grid" aria-hidden="true"></div>
+
+  <!-- Intro block -->
+  <div class="services-process-section__container">
+    <div class="services-process-section__intro">
+      <span class="services-process-section__lot-tag">LOT: 004 // BUILD SEQUENCE</span>
+      <h2 class="services-process-section__heading">Our Four-Phase Process</h2>
+      <p class="services-process-section__subheading">A structured, transparent roadmap from first audit to full launch — delivering a custom website design built to generate real business results.</p>
+    </div>
+
+    <!-- Process stages -->
+    <div class="services-process-section__stages">
+
+      <!-- Connector line -->
+      <div class="services-process-section__connector" aria-hidden="true">
+        <div class="services-process-section__connector-line"></div>
+        <div class="services-process-section__connector-diamond services-process-section__connector-diamond--1" aria-hidden="true"></div>
+        <div class="services-process-section__connector-diamond services-process-section__connector-diamond--2" aria-hidden="true"></div>
+        <div class="services-process-section__connector-diamond services-process-section__connector-diamond--3" aria-hidden="true"></div>
+      </div>
+
+      <!-- Stage 01 -->
+      <article class="services-process-section__stage">
+        <div class="services-process-section__stage-number-wrap">
+          <div class="services-process-section__stage-ring" aria-hidden="true"></div>
+          <span class="services-process-section__stage-number">01</span>
+        </div>
+        <div class="services-process-section__stage-content">
+          <div class="services-process-section__stage-label">STRUCTURAL AUDIT</div>
+          <h3 class="services-process-section__stage-title">Diagnose &amp; Discover</h3>
+          <p class="services-process-section__stage-desc">We conduct a full structural audit of your current digital presence — identifying gaps in visibility, trust signals, and conversion pathways. No guesswork. Just a clear picture of what's working and what's costing you customers.</p>
+          <ul class="services-process-section__stage-list">
+            <li><i class="fas fa-check" aria-hidden="true"></i> Competitor benchmarking</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> SEO &amp; mobile health check</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> Conversion gap analysis</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Stage 02 -->
+      <article class="services-process-section__stage">
+        <div class="services-process-section__stage-number-wrap">
+          <div class="services-process-section__stage-ring" aria-hidden="true"></div>
+          <span class="services-process-section__stage-number">02</span>
+        </div>
+        <div class="services-process-section__stage-content">
+          <div class="services-process-section__stage-label">POSITIONING &amp; PLANNING</div>
+          <h3 class="services-process-section__stage-title">Architect Your Strategy</h3>
+          <p class="services-process-section__stage-desc">We define your digital positioning, audience messaging, and site architecture. Every page, every call-to-action, and every layout decision is mapped to a single goal: turning visitors into paying customers.</p>
+          <ul class="services-process-section__stage-list">
+            <li><i class="fas fa-check" aria-hidden="true"></i> Brand voice &amp; messaging</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> Site structure &amp; wireframes</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> CTA &amp; conversion mapping</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Stage 03 -->
+      <article class="services-process-section__stage">
+        <div class="services-process-section__stage-number-wrap">
+          <div class="services-process-section__stage-ring" aria-hidden="true"></div>
+          <span class="services-process-section__stage-number">03</span>
+        </div>
+        <div class="services-process-section__stage-content">
+          <div class="services-process-section__stage-label">BUILD &amp; OPTIMIZE</div>
+          <h3 class="services-process-section__stage-title">Construct Your Digital Property</h3>
+          <p class="services-process-section__stage-desc">Our web design and development services bring your vision to life — custom-built for speed, mobile performance, and search visibility. Every element is engineered to earn trust and drive action from the first click.</p>
+          <ul class="services-process-section__stage-list">
+            <li><i class="fas fa-check" aria-hidden="true"></i> Custom design &amp; development</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> Mobile-first performance</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> On-page SEO optimization</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- Stage 04 -->
+      <article class="services-process-section__stage">
+        <div class="services-process-section__stage-number-wrap">
+          <div class="services-process-section__stage-ring" aria-hidden="true"></div>
+          <span class="services-process-section__stage-number">04</span>
+        </div>
+        <div class="services-process-section__stage-content">
+          <div class="services-process-section__stage-label">LAUNCH &amp; SUPPORT</div>
+          <h3 class="services-process-section__stage-title">Go Live &amp; Grow</h3>
+          <p class="services-process-section__stage-desc">We launch your site with precision and stay by your side post-launch. From analytics monitoring to ongoing updates, your digital property keeps working as your 24/7 salesperson — generating calls, leads, and bookings.</p>
+          <ul class="services-process-section__stage-list">
+            <li><i class="fas fa-check" aria-hidden="true"></i> Pre-launch QA &amp; testing</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> Analytics &amp; tracking setup</li>
+            <li><i class="fas fa-check" aria-hidden="true"></i> Ongoing support &amp; updates</li>
+          </ul>
+        </div>
+      </article>
+
+    </div>
+    <!-- /stages -->
+
+    <!-- CTA row -->
+    <div class="services-process-section__cta-row">
+      <a href="/contact" class="services-process-section__btn-primary">Start Your Audit</a>
+      <a href="/services" class="services-process-section__btn-secondary">View Our Services</a>
+    </div>
+  </div>
+
+  <!-- Bottom divider: curved gradient fade from dark navy into off-white with gold line -->
+  <div class="services-process-section__divider-wrapper" aria-hidden="true">
+    <div class="services-process-section__gold-transition-line"></div>
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="proc-fade-grad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0B1220" stop-opacity="0"></stop>
+          <stop offset="100%" stop-color="#F8F8F6" stop-opacity="1"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,90 L0,30 Q300,0 600,18 T1200,10 L1200,90 Z" fill="#FFFFFF"></path>
+      <path d="M0,90 L0,30 Q300,0 600,18 T1200,10 L1200,90 Z" fill="#FFFFFF" opacity="0.5"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section class="services-outcomes-section" data-layout-spec="Services-outcomes">
+  <div class="services-outcomes-container">
+
+    <!-- Section Label -->
+    <div class="services-outcomes-label">
+      <span class="services-outcomes-tag">RESULTS // WHAT YOU GAIN</span>
+    </div>
+
+    <!-- Section Heading -->
+    <div class="services-outcomes-header">
+      <h2 class="services-outcomes-title">Your Website Becomes Your Best Salesperson</h2>
+      <p class="services-outcomes-subtitle">Every custom website design service we deliver is engineered for one purpose: measurable business growth. Here's what changes when your digital presence is built right.</p>
+    </div>
+
+    <!-- Three Column Outcomes -->
+    <div class="services-outcomes-grid">
+
+      <!-- Outcome 1: Trust -->
+      <article class="services-outcomes-card">
+        <div class="services-outcomes-icon-wrap">
+          <svg class="services-outcomes-icon" data-element-type="icon" data-icon-type="svg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" focusable="false">
+            <circle cx="28" cy="28" r="26" stroke="currentColor" stroke-width="1.5" opacity="0.25"></circle>
+            <circle cx="28" cy="28" r="18" stroke="currentColor" stroke-width="1.5" opacity="0.45"></circle>
+            <circle cx="28" cy="28" r="10" stroke="currentColor" stroke-width="1.5" opacity="0.7"></circle>
+            <circle cx="28" cy="28" r="4" fill="currentColor"></circle>
+            <path d="M28 10 L28 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M46 28 L52 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M28 46 L28 52" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M10 28 L4 28" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+          <div class="services-outcomes-icon-line" aria-hidden="true"></div>
+        </div>
+        <div class="services-outcomes-card-content">
+          <div class="services-outcomes-number" aria-hidden="true">01</div>
+          <h3 class="services-outcomes-card-title">Stronger Trust at First Impression</h3>
+          <p class="services-outcomes-card-text">Visitors decide within seconds whether to stay or leave. A professionally designed digital presence signals credibility instantly — before a single word is read. We build sites that command authority and make your business the obvious, trusted choice.</p>
+          <div class="services-outcomes-metric">
+            <span class="services-outcomes-metric-value">3 sec</span>
+            <span class="services-outcomes-metric-label">to form a first impression</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Outcome 2: Leads -->
+      <article class="services-outcomes-card services-outcomes-card--featured">
+        <div class="services-outcomes-icon-wrap">
+          <svg class="services-outcomes-icon" data-element-type="icon" data-icon-type="svg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" focusable="false">
+            <path d="M14 42 L14 28 L8 28 L28 8 L48 28 L42 28 L42 42 Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none" opacity="0.3"></path>
+            <path d="M20 42 L20 32 L36 32 L36 42" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" fill="none"></path>
+            <rect x="22" y="34" width="5" height="8" stroke="currentColor" stroke-width="1.2" fill="none"></rect>
+            <rect x="29" y="34" width="5" height="5" stroke="currentColor" stroke-width="1.2" fill="none"></rect>
+            <path d="M38 20 L44 14 M44 14 L44 20 M44 14 L38 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <div class="services-outcomes-icon-line" aria-hidden="true"></div>
+        </div>
+        <div class="services-outcomes-card-content">
+          <div class="services-outcomes-number" aria-hidden="true">02</div>
+          <h3 class="services-outcomes-card-title">More Calls &amp; Leads Through Clear Action Paths</h3>
+          <p class="services-outcomes-card-text">Most websites lose customers because they fail to show them what to do next. We engineer clear conversion pathways — prominent calls-to-action, frictionless contact points, and intuitive navigation — so visitors become phone calls, enquiries, and bookings.</p>
+          <div class="services-outcomes-metric">
+            <span class="services-outcomes-metric-value">24/7</span>
+            <span class="services-outcomes-metric-label">lead capture, even while you sleep</span>
+          </div>
+        </div>
+        <div class="services-outcomes-card-accent" aria-hidden="true"></div>
+      </article>
+
+      <!-- Outcome 3: Competitiveness -->
+      <article class="services-outcomes-card">
+        <div class="services-outcomes-icon-wrap">
+          <svg class="services-outcomes-icon" data-element-type="icon" data-icon-type="svg" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" focusable="false">
+            <rect x="6" y="30" width="10" height="16" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.4"></rect>
+            <rect x="20" y="22" width="10" height="24" stroke="currentColor" stroke-width="1.5" fill="none" opacity="0.65"></rect>
+            <rect x="34" y="14" width="10" height="32" stroke="currentColor" stroke-width="1.5" fill="none"></rect>
+            <path d="M8 28 L22 20 L36 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"></path>
+            <circle cx="36" cy="12" r="2.5" fill="currentColor"></circle>
+            <path d="M4 46 L52 46" stroke="currentColor" stroke-width="1" opacity="0.3"></path>
+          </svg>
+          <div class="services-outcomes-icon-line" aria-hidden="true"></div>
+        </div>
+        <div class="services-outcomes-card-content">
+          <div class="services-outcomes-number" aria-hidden="true">03</div>
+          <h3 class="services-outcomes-card-title">Better Local Competitiveness Online</h3>
+          <p class="services-outcomes-card-text">Your competitors are online. The question is whether your digital location outperforms theirs. Our custom website design agency builds polished, mobile-optimised digital storefronts that position local and service businesses to consistently win the comparison — and take the customer.</p>
+          <div class="services-outcomes-metric">
+            <span class="services-outcomes-metric-value">100%</span>
+            <span class="services-outcomes-metric-label">mobile optimised for every screen</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <!-- Gold Rule Divider -->
+    <div class="services-outcomes-rule" aria-hidden="true">
+      <div class="services-outcomes-rule-line"></div>
+      <svg data-no-icon-edit="true" aria-hidden="true" class="services-outcomes-rule-diamond" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 1 L15 8 L8 15 L1 8 Z" fill="var(--secondary)" opacity="0.7"></path>
+      </svg>
+      <div class="services-outcomes-rule-line"></div>
+    </div>
+
+    <!-- Closing Statement -->
+    <div class="services-outcomes-closing">
+      <p class="services-outcomes-closing-text">Your website isn't a brochure — it's your most hardworking team member. A well-built digital property through our web design and development services works around the clock, qualifying prospects, building trust, and converting attention into revenue while you focus on delivering for your clients.</p>
+      <a href="/contact" class="services-outcomes-cta btn-primary">Start Building Your Digital Property</a>
+    </div>
+
+  </div>
+
+  <!-- Bottom Stepped Divider -->
+  <div class="services-outcomes-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,60 L0,40 L100,40 L100,30 L240,30 L240,40 L380,40 L380,25 L520,25 L520,38 L660,38 L660,28 L800,28 L800,40 L940,40 L940,32 L1080,32 L1080,42 L1200,42 L1200,60 Z" fill="#081848" opacity="0.5"></path>
+      <path d="M0,60 L0,48 L150,48 L150,38 L300,38 L300,50 L450,50 L450,36 L600,36 L600,46 L750,46 L750,34 L900,34 L900,48 L1050,48 L1050,38 L1200,38 L1200,60 Z" fill="#081848" opacity="0.12"></path>
+      <path d="M0,60 L0,54 L200,54 L200,46 L400,46 L400,54 L600,54 L600,44 L800,44 L800,54 L1000,54 L1000,46 L1200,46 L1200,60 Z" fill="#081848" opacity="1"></path>
+    </svg>
+  </div>
+
+</section>
+  </main>
+  
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-top"><div class="footer-container"><div class="footer-grid"><div class="footer-col footer-col--brand"><a href="/" class="footer-logo-link" aria-label="Virtual Key Solutions Home"><img src="/assets/virtual-key-solutions-web-design-digital-marketing-logo.webp" alt="Virtual Key Solutions" class="logo"></a><p class="footer-tagline">We build digital infrastructure that unlocks growth — precision-crafted websites and marketing strategies for ambitious local businesses.</p><div class="footer-social" aria-label="Social Media Links"></div></div><div class="footer-col footer-col--links"><h3 class="footer-heading"><span class="footer-heading-accent"></span>Quick Links</h3><ul class="footer-nav" aria-label="Quick Links Navigation"><li><a href="/">Home</a></li><li><a href="/services">Services</a></li><li><a href="/why-us">Why Us</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-col--contact"><h3 class="footer-heading"><span class="footer-heading-accent"></span>Get In Touch</h3><ul class="footer-contact" aria-label="Contact Information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div><div class="footer-col footer-col--badge"><h3 class="footer-heading"><span class="footer-heading-accent"></span>Why Choose Us</h3><div class="footer-badges"><div class="footer-badge"><span class="badge-icon"><i class="fas fa-key"></i></span><span class="badge-label">Premium Web Design</span></div><div class="footer-badge"><span class="badge-icon"><i class="fas fa-chart-line"></i></span><span class="badge-label">Growth-Driven Marketing</span></div><div class="footer-badge"><span class="badge-icon"><i class="fas fa-headset"></i></span><span class="badge-label">Dedicated Support</span></div><div class="footer-badge"><span class="badge-icon"><i class="fas fa-shield-alt"></i></span><span class="badge-label">Results Guaranteed</span></div></div></div></div></div></div><div class="footer-bottom"><div class="footer-container"><div class="footer-bottom-inner"><p class="footer-copyright">© 2026 Virtual Key Solutions. All rights reserved.</p><div class="footer-legal" aria-label="Legal Links"><a href="/privacy">Privacy Policy</a><span class="footer-legal-divider" aria-hidden="true">|</span><a href="/terms">Terms &amp; Conditions</a><span class="footer-legal-divider" aria-hidden="true">|</span><a href="/accessibility">Accessibility</a><span class="footer-legal-divider" aria-hidden="true">|</span><a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-attribution">Generated by Zappy</a></div></div></div></div></footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(248,248,246,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main:not(.courses-page-main)>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>

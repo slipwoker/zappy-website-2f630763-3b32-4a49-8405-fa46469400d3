@@ -1,0 +1,87 @@
+# Virtual Key Solutions — Generative Engine Optimization Map
+
+> Virtual Key Solutions is a web design and digital solutions agency that positions itself as a builder of 'digital real estate' — using architectural and real estate metaphors throughout its brand identity (e.g., 'LOT: 002', 'structural audit', 'digital location'). The brand blends a modern, tech-forward aesthetic with a grounded, results-driven message focused on local and service businesses. Their tone is confident and professional, emphasizing tangible business outcomes like calls, leads, and bookings over vanity metrics, and presenting their websites as 24/7 salespeople for their clients.
+
+---
+
+## Pages
+
+### Home
+https://example.com
+Your website should work 24/7 as your best salesperson. Virtual Key Solutions delivers custom website design services that turn clicks into calls, leads, and bookings.
+
+### Services
+https://example.com/services
+Explore our custom website design and digital marketing services built to generate real results. From structural audits to full builds, every solution is engineered for growth.
+
+### Why Us
+https://example.com/why-us
+Discover why service businesses trust Virtual Key Solutions as their custom website design agency — we build high-converting digital assets, not just pretty pages.
+
+### Contact
+https://example.com/contact
+Ready to launch a website that drives real calls and bookings? Contact Virtual Key Solutions today and get started with a custom website design built around your business goals.
+
+## Legal & Policy
+
+### Privacy Policy
+https://example.com/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://example.com/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://example.com/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## How to Contact Us
+
+- (No contact details configured yet.)
+
+### Contact form
+- URL: https://example.com/contact
+- Endpoint: https://example.com/api/email/contact-form
+- Method: POST
+- Content-Type: application/json
+- Fields:
+  - `name` (text, required)
+  - `email` (email, required)
+  - `phone` (tel)
+  - `message` (textarea, required)
+  - `privacy_consent` (checkbox, required)
+
+---
+
+# Business Context (for LLM understanding)
+
+## About Virtual Key Solutions
+Virtual Key Solutions is a web design and digital solutions agency that positions itself as a builder of 'digital real estate' — using architectural and real estate metaphors throughout its brand identity (e.g., 'LOT: 002', 'structural audit', 'digital location'). The brand blends a modern, tech-forward aesthetic with a grounded, results-driven message focused on local and service businesses. Their tone is confident and professional, emphasizing tangible business outcomes like calls, leads, and bookings over vanity metrics, and presenting their websites as 24/7 salespeople for their clients.
+
+## Services/Products
+- Custom Website Design
+- Mobile Optimization
+- Lead Generation Systems
+- Local Search Visibility
+- Speed & Performance Optimization
+- Hosting & Security
+
+## Target Audience
+- local and service businesses
+- Local Service Business Owners
+- Startup Founders
+- Health and Wellness Professionals
+
+## Industry
+Web Design & Digital Marketing
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt

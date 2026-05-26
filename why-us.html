@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>Your Digital Location Deserves a Stronger Foundation — Virtual Key Solutions</title>
+    <meta name="description" content="Discover why service businesses trust Virtual Key Solutions as their custom website design agency — we build high-converting digital assets, not just pretty pages.">
+    <meta name="keywords" content="custom website design agency, why choose a web design company, results-driven web design, custom website design company, web design for local businesses">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '2f630763-3b32-4a49-8405-fa46469400d3',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="Your Digital Location Deserves a Stronger Foundation — Virtual Key Solutions">
+    <meta property="og:description" content="Discover why service businesses trust Virtual Key Solutions as their custom website design agency — we build high-converting digital assets, not just pretty pages.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Your Digital Location Deserves a Stronger Foundation — Virtual Key Solutions">
+    <meta name="twitter:description" content="Discover why service businesses trust Virtual Key Solutions as their custom website design agency — we build high-converting digital assets, not just pretty pages.">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+    <script>window.ZAPPY_WEBSITE_ID = "2f630763-3b32-4a49-8405-fa46469400d3"; window.ZAPPY_API_BASE = "https://api.zappy5.com";</script>
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-light) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-light) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-light) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to main content</a>
+  <nav class="navbar">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-why-us-image-1.webp" alt="Virtual Key Solutions"></a>
+    </div>
+
+    <ul class="nav-menu" id="navMenu"><li><a href="/">Home</a></li><li><a href="/services">Services</a></li><li><a href="/why-us">Why Us</a></li></ul>
+
+    <div class="nav-cta-container">
+      <a href="/contact" class="nav-cta-btn">Contact</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-light)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section class="why-us-statement-section" data-layout-spec="Why Us-statement">
+  <div class="wus-container">
+
+    <!-- Centered Title Area -->
+    <div class="wus-header">
+      <div class="wus-eyebrow"><span class="wus-eyebrow-line"></span><span class="wus-eyebrow-text">Our Philosophy</span><span class="wus-eyebrow-line"></span></div>
+      <h2 class="wus-title">We Build for Conversions,<br>Credibility &amp; Real Growth</h2>
+      <p class="wus-subtitle">Most agencies chase trends. We engineer outcomes. Every custom website design service we deliver is built on a single standard: does it bring your business more calls, more leads, and more customers?</p>
+    </div>
+
+    <!-- Two-Column Composition -->
+    <div class="wus-body">
+
+      <!-- Left: Brand Philosophy Text -->
+      <div class="wus-philosophy">
+        <div class="wus-gold-rule"></div>
+        <h3 class="wus-philosophy-heading">Your Website Is Digital Real Estate — Make It Work for You</h3>
+        <p class="wus-philosophy-text">A beautiful website that doesn't convert is an expensive billboard. At Virtual Key Solutions, we treat every project as a piece of digital infrastructure — engineered to perform, built to last, and designed to earn trust the moment a visitor arrives.</p>
+        <p class="wus-philosophy-text">We don't hand you a template and call it a day. We study your market, your competitors, and your customers — then we build a custom website design that positions your business as the obvious choice in your area.</p>
+
+        <ul class="wus-pillars">
+          <li class="wus-pillar-item">
+            <span class="wus-pillar-icon"><svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 10.5L8 14.5L16 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+            <div class="wus-pillar-content">
+              <strong>Conversion-First Architecture</strong>
+              <span>Every layout decision is made to guide visitors toward action — calls, forms, and bookings.</span>
+            </div>
+          </li>
+          <li class="wus-pillar-item">
+            <span class="wus-pillar-icon"><svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 10.5L8 14.5L16 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+            <div class="wus-pillar-content">
+              <strong>Credibility by Design</strong>
+              <span>We build instant trust through professional structure, clear messaging, and polished visual authority.</span>
+            </div>
+          </li>
+          <li class="wus-pillar-item">
+            <span class="wus-pillar-icon"><svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 10.5L8 14.5L16 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+            <div class="wus-pillar-content">
+              <strong>24/7 Sales Performance</strong>
+              <span>Your website becomes your best salesperson — working around the clock to capture leads while you sleep.</span>
+            </div>
+          </li>
+          <li class="wus-pillar-item">
+            <span class="wus-pillar-icon"><svg data-element-type="icon" data-icon-type="svg" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M4 10.5L8 14.5L16 6.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+            <div class="wus-pillar-content">
+              <strong>Built for Local Dominance</strong>
+              <span>Our web design and development services are engineered for local businesses ready to outrank and outperform competitors.</span>
+            </div>
+          </li>
+        </ul>
+
+        <a href="/contact" class="wus-cta-btn">Start Your Digital Build</a>
+      </div>
+
+      <!-- Right: Premium Image Tile -->
+      <div class="wus-image-col">
+        <div class="wus-image-wrapper">
+          <img loading="eager" fetchpriority="high" data-placeholder="why-us-statement-image-1" data-context="An architectural scale model of a modern city block seamlessly transitioning into a glowing digital interface — half physical blueprint-style building model in navy and white, half luminous digital dashboard with web design wireframes, conversion metrics, and golden UI elements. Shot on a dark studio surface with dramatic directional lighting, evoking the metaphor of building digital real estate. Premium, editorial, architectural photography aesthetic." width="600" height="720" src="/assets/site-why-us-statement-image-1.webp" alt="Architectural model transforming into a digital interface — representing Virtual Key Solutions digital real estate philosophy">
+          <div class="wus-image-overlay"></div>
+          <div class="wus-lot-badge">LOT: 002</div>
+        </div>
+        <!-- Circular Key-Frame Overlay -->
+        <div class="wus-keyframe-circle" aria-hidden="true">
+          <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="110" cy="110" r="106" stroke="url(#keyGold)" stroke-width="2" stroke-dasharray="8 5"></circle>
+            <circle cx="110" cy="110" r="80" stroke="rgba(201,162,74,0.2)" stroke-width="1"></circle>
+            <circle cx="110" cy="110" r="12" fill="rgba(201,162,74,0.15)" stroke="rgba(201,162,74,0.6)" stroke-width="1.5"></circle>
+            <line x1="110" y1="98" x2="110" y2="4" stroke="rgba(201,162,74,0.4)" stroke-width="1"></line>
+            <line x1="122" y1="110" x2="216" y2="110" stroke="rgba(201,162,74,0.4)" stroke-width="1"></line>
+            <defs>
+              <linearGradient id="keyGold" x1="0" y1="0" x2="220" y2="220" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#C9A24A" stop-opacity="0.8"></stop>
+                <stop offset="50%" stop-color="#E0C06B" stop-opacity="0.5"></stop>
+                <stop offset="100%" stop-color="#C9A24A" stop-opacity="0.2"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Bottom Divider: Navy wave with gold trim -->
+  <div class="wus-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Gold trim line -->
+      <path d="M0,32 Q150,18 300,28 T600,22 Q750,16 900,26 T1200,20" stroke="rgba(201,162,74,0.55)" stroke-width="1.5" fill="#0B1220"></path>
+      <!-- Navy wave fill -->
+      <path d="M0,90 L0,34 Q150,20 300,30 T600,24 Q750,18 900,28 T1200,22 L1200,90 Z" fill="#0B1220"></path>
+    </svg>
+  </div>
+</section>
+
+<section class="why-us-differentiators-section" data-layout-spec="Why Us-differentiators">
+  <!-- Decorative background elements -->
+  <div class="why-us-diff-bg-grid" aria-hidden="true"></div>
+  <div class="why-us-diff-dot-field" aria-hidden="true"></div>
+
+  <div class="why-us-diff-container">
+    <!-- Section header -->
+    <div class="why-us-diff-header">
+      <div class="why-us-diff-eyebrow">
+        <span class="why-us-diff-eyebrow-line"></span>
+        <span class="why-us-diff-eyebrow-text">Why Virtual Key Solutions</span>
+        <span class="why-us-diff-eyebrow-line"></span>
+      </div>
+      <h2 class="why-us-diff-heading">What Sets Us Apart</h2>
+      <p class="why-us-diff-subheading">Our custom website design services are engineered around one goal: turning your digital presence into a revenue-generating asset — not just a page on the internet.</p>
+    </div>
+
+    <!-- Four-card grid -->
+    <div class="why-us-diff-grid">
+
+      <!-- Card 1 -->
+      <article class="why-us-diff-card">
+        <div class="why-us-diff-card-top-line"></div>
+        <div class="why-us-diff-card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 24 L16 8 L28 24"></path>
+            <path d="M10 24 L10 17 L16 10 L22 17 L22 24"></path>
+            <line x1="13" y1="24" x2="13" y2="19"></line>
+            <line x1="19" y1="24" x2="19" y2="19"></line>
+            <rect x="13" y="19" width="6" height="5"></rect>
+          </svg>
+        </div>
+        <div class="why-us-diff-card-number">01</div>
+        <h3 class="why-us-diff-card-title">Built for Conversions, Not Just Aesthetics</h3>
+        <p class="why-us-diff-card-body">Every layout decision, call-to-action placement, and page structure is designed to turn visitors into phone calls, leads, and bookings. Your website isn't a digital brochure — it's your best salesperson working 24/7.</p>
+        <div class="why-us-diff-card-footer-rule"></div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="why-us-diff-card">
+        <div class="why-us-diff-card-top-line"></div>
+        <div class="why-us-diff-card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="16" cy="16" r="11"></circle>
+            <path d="M16 10 L16 16 L21 19"></path>
+            <circle cx="16" cy="16" r="2" fill="currentColor" stroke="none"></circle>
+          </svg>
+        </div>
+        <div class="why-us-diff-card-number">02</div>
+        <h3 class="why-us-diff-card-title">Real Business Outcomes Over Vanity Metrics</h3>
+        <p class="why-us-diff-card-body">We don't celebrate page views. We focus on what actually matters to your business — more calls, more leads, more bookings. Every project is measured against tangible growth, not impressions that don't pay your bills.</p>
+        <div class="why-us-diff-card-footer-rule"></div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="why-us-diff-card">
+        <div class="why-us-diff-card-top-line"></div>
+        <div class="why-us-diff-card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="4" y="8" width="24" height="16" rx="2"></rect>
+            <path d="M10 14 L14 18 L22 12"></path>
+          </svg>
+        </div>
+        <div class="why-us-diff-card-number">03</div>
+        <h3 class="why-us-diff-card-title">Clean, Fast &amp; Modern Design Standards</h3>
+        <p class="why-us-diff-card-body">We build to current web standards — mobile-optimized, lightning-fast, and visually sharp. No bloated templates. No outdated code. Your digital real estate is built on a solid structural foundation that earns trust on first contact.</p>
+        <div class="why-us-diff-card-footer-rule"></div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="why-us-diff-card">
+        <div class="why-us-diff-card-top-line"></div>
+        <div class="why-us-diff-card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M6 26 L6 14 L12 8 L18 14 L18 26"></path>
+            <path d="M18 20 L22 16 L28 20 L28 26"></path>
+            <line x1="9" y1="26" x2="9" y2="20"></line>
+            <line x1="13" y1="26" x2="13" y2="20"></line>
+            <rect x="9" y="20" width="4" height="6"></rect>
+          </svg>
+        </div>
+        <div class="why-us-diff-card-number">04</div>
+        <h3 class="why-us-diff-card-title">Specialized in Local &amp; Service Businesses</h3>
+        <p class="why-us-diff-card-body">We understand the unique challenges of service-area and local businesses. From trust signals to local SEO structure, our custom website design agency approach is built around helping customers choose you over every competitor in your market.</p>
+        <div class="why-us-diff-card-footer-rule"></div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Bottom divider: layered grid fade with skyline contour dissolving into off-white -->
+  <div class="why-us-diff-divider-wrapper">
+    <!-- Faint skyline contour SVG -->
+    <svg class="why-us-diff-skyline" data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="0,80 60,80 60,60 90,60 90,50 120,50 120,60 150,60 150,45 180,45 180,60 210,60 210,55 240,55 240,40 270,40 270,55 300,55 300,65 330,65 330,50 360,50 360,60 390,60 390,35 420,35 420,55 450,55 450,60 480,60 480,50 510,50 510,65 540,65 540,45 570,45 570,55 600,55 600,60 630,60 630,40 660,40 660,55 690,55 690,50 720,50 720,65 750,65 750,45 780,45 780,60 810,60 810,50 840,50 840,35 870,35 870,55 900,55 900,60 930,60 930,50 960,50 960,65 990,65 990,45 1020,45 1020,60 1050,60 1050,55 1080,55 1080,40 1110,40 1110,60 1140,60 1140,65 1200,65 1200,80" fill="none" stroke="rgba(201,162,74,0.18)" stroke-width="1.5"></polyline>
+    </svg>
+    <!-- Main dissolve fill -->
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="why-us-diff-fade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#0B1220" stop-opacity="0"></stop>
+          <stop offset="55%" stop-color="#F8F8F6" stop-opacity="0.7"></stop>
+          <stop offset="100%" stop-color="#F8F8F6" stop-opacity="1"></stop>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="1200" height="100" fill="url(#why-us-diff-fade)"></rect>
+    </svg>
+  </div>
+
+</section>
+
+<section class="why-us-faq-section" data-layout-spec="Why Us-faq">
+  <div class="why-us-faq-container">
+
+    <!-- Section Intro -->
+    <div class="why-us-faq-intro">
+      <div class="why-us-faq-eyebrow">
+        <span class="why-us-faq-lot">LOT: 007</span>
+        <span class="why-us-faq-divider-dot"></span>
+        <span class="why-us-faq-lot-label">KNOWLEDGE BASE</span>
+      </div>
+      <h2 class="why-us-faq-heading">Frequently Asked Questions</h2>
+      <p class="why-us-faq-subheading">Everything you need to know about working with Virtual Key Solutions — from first conversation to launch day and beyond. If you don't see your question here, we're always happy to talk.</p>
+      <div class="why-us-faq-gold-rule" aria-hidden="true">
+        <svg data-no-icon-edit="true" aria-hidden="true" width="120" height="12" viewBox="0 0 120 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="0" y1="6" x2="52" y2="6" stroke="#C9A24A" stroke-width="1.5" stroke-opacity="0.6"></line>
+          <rect x="54" y="3" width="6" height="6" transform="rotate(45 57 6)" fill="#C9A24A" fill-opacity="0.7"></rect>
+          <line x1="64" y1="6" x2="120" y2="6" stroke="#C9A24A" stroke-width="1.5" stroke-opacity="0.6"></line>
+        </svg>
+      </div>
+    </div>
+
+    <!-- FAQ Grid -->
+    <div class="why-us-faq-grid">
+
+      <!-- Column 1 -->
+      <div class="why-us-faq-col">
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">What does Virtual Key Solutions actually do?</h3>
+          <p class="why-us-faq-answer">We design and build professional websites for local and service-based businesses — and we back them with digital marketing strategy. Think of us as architects of your digital real estate: we construct an online presence that earns trust, generates calls, and converts visitors into paying customers. Every site we build is engineered for visibility, credibility, and consistent growth.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Who do you typically work with?</h3>
+          <p class="why-us-faq-answer">We work primarily with local and service-based businesses — contractors, clinics, consultants, tradespeople, hospitality operators, and professional service providers. If your business depends on phone calls, bookings, or in-person visits, we're built for you. Our custom website design services are tailored to businesses that need real-world results, not just an online presence.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Why does a professional website matter so much?</h3>
+          <p class="why-us-faq-answer">Your website is your most visible business asset — operating 24/7 even when you're not. A professional site builds instant trust, clearly communicates your value, and guides visitors toward taking action. Without it, you're losing customers to competitors who made the investment. A poorly built site is worse than none: it signals neglect and drives people away before they ever call.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">What makes Virtual Key Solutions different from other agencies?</h3>
+          <p class="why-us-faq-answer">We don't chase vanity metrics. Our focus is on outcomes that matter to your business: calls, leads, and bookings. We treat every project as a structural build — not a template swap. Our brand philosophy of 'digital real estate' means we approach your website the way a skilled developer approaches a property: with precision, purpose, and long-term value in mind. You get a dedicated team, not a ticket queue.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Will my website be mobile-friendly?</h3>
+          <p class="why-us-faq-answer">Absolutely — mobile optimization is non-negotiable in every project we deliver. Over 60% of web traffic comes from mobile devices, and Google ranks mobile-first. Every site we build performs seamlessly across phones, tablets, and desktops. We test rigorously across device sizes so your customers have a flawless experience regardless of how they find you.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Can you redesign my existing website?</h3>
+          <p class="why-us-faq-answer">Yes — redesigns are a significant part of what we do. We begin with a structural audit of your current site to diagnose what's failing and why. From there, we rebuild with purpose: improved layout, stronger messaging, faster load times, and a clear conversion path. We preserve what's working and replace what isn't. Most clients see immediate improvements in engagement and lead quality after a redesign.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Do you help with Google visibility and local SEO?</h3>
+          <p class="why-us-faq-answer">Yes. Every site we build is structured for search engine visibility from the ground up — proper heading hierarchy, fast load speeds, clean code, and on-page SEO fundamentals. We also offer dedicated local SEO services including Google Business Profile optimisation, local citation building, and keyword targeting for your service area. Being found in your digital location is just as important as having a great site.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Is the consultation really free?</h3>
+          <p class="why-us-faq-answer">Yes, completely. Your initial consultation with us carries no cost and no obligation. We use that time to understand your business, your goals, and where your current digital presence is falling short. You'll leave with clarity on what's needed — whether you choose to work with us or not. We believe in earning your trust before asking for your investment.</p>
+        </article>
+
+      </div>
+
+      <!-- Column 2 -->
+      <div class="why-us-faq-col">
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">How long does it take to build a website?</h3>
+          <p class="why-us-faq-answer">Most projects are completed within 2–4 weeks from the time we have all the necessary content and approvals in hand. Complex builds with custom functionality or larger site architectures may take 4–6 weeks. We provide a clear project timeline at the outset and keep you informed at every stage. Speed matters to us — but never at the cost of quality or structural integrity.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Do I need to provide my own content and images?</h3>
+          <p class="why-us-faq-answer">We work with whatever you have — and fill the gaps where you don't. If you have brand photos and written copy ready, we'll incorporate them seamlessly. If you need content written or professional imagery sourced, we offer copywriting and curated stock photography as part of our service packages. Our goal is to remove every obstacle between you and a finished, high-performing website.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">What is a 'preview period' and how does it work?</h3>
+          <p class="why-us-faq-answer">Before your site goes live, we share a private staging link so you can review every page in detail. This preview period gives you the opportunity to request adjustments, refine copy, and confirm every element meets your expectations. We don't launch until you're satisfied. It's our quality checkpoint — ensuring the final product is exactly what was agreed upon, with no surprises.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Who owns the website once it's built?</h3>
+          <p class="why-us-faq-answer">You do — fully and completely. Upon final payment, all design assets, content, and website files belong to you. We don't lock you into proprietary systems that hold your site hostage. Your domain, your hosting account, your business. We believe in building relationships based on results, not dependency. You stay because we deliver value — not because you have no choice.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">Do you offer ongoing support after launch?</h3>
+          <p class="why-us-faq-answer">Yes. We offer ongoing maintenance and support packages for clients who want peace of mind after launch. This covers software updates, security monitoring, minor content edits, and performance checks. Think of it as a property management service for your digital real estate — keeping everything running smoothly so you can focus on your business. One-off support is also available as needed.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">How is pricing structured?</h3>
+          <p class="why-us-faq-answer">Our pricing is project-based and transparent — no hidden fees, no surprise invoices. Every proposal includes a detailed scope of work so you know exactly what you're getting and what it costs. We offer packages suited to different business sizes and needs, from foundational digital storefronts to full custom website design and development builds with integrated marketing. Contact us for a tailored quote specific to your goals.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">What platforms do you build on?</h3>
+          <p class="why-us-faq-answer">We build on platforms best suited to your business needs — most commonly WordPress, with custom themes and no bloated page builders that slow sites down. For e-commerce requirements, we work with Shopify and WooCommerce. Our recommendations are always based on what will perform best for your specific use case, not what's easiest for us to build on. The right foundation matters.</p>
+        </article>
+
+        <article class="why-us-faq-item">
+          <h3 class="why-us-faq-question">How do I get started?</h3>
+          <p class="why-us-faq-answer">Getting started is straightforward. Reach out via our contact page or call us directly to book your free consultation. We'll discuss your business, your goals, and your current digital situation. From there, we put together a tailored proposal. No pressure, no hard sell — just a clear picture of what's possible and what it takes to get there. Your digital real estate is waiting to be built.</p>
+        </article>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Gradient Band Divider -->
+  <div class="why-us-faq-band-divider" aria-hidden="true"></div>
+</section>
+
+<section class="why-us-cta-section" data-layout-spec="Why Us-cta">
+  <!-- Decorative city skyline silhouette -->
+  <div class="why-us-cta-skyline" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 900 180" preserveAspectRatio="xMaxYMax meet" xmlns="http://www.w3.org/2000/svg">
+      <rect x="0" y="100" width="40" height="80"></rect>
+      <rect x="50" y="70" width="30" height="110"></rect>
+      <rect x="90" y="90" width="50" height="90"></rect>
+      <rect x="150" y="50" width="25" height="130"></rect>
+      <rect x="185" y="80" width="45" height="100"></rect>
+      <rect x="240" y="60" width="35" height="120"></rect>
+      <rect x="285" y="40" width="20" height="140"></rect>
+      <rect x="315" y="75" width="55" height="105"></rect>
+      <rect x="380" y="55" width="30" height="125"></rect>
+      <rect x="420" y="85" width="40" height="95"></rect>
+      <rect x="470" y="45" width="22" height="135"></rect>
+      <rect x="502" y="70" width="48" height="110"></rect>
+      <rect x="560" y="60" width="28" height="120"></rect>
+      <rect x="598" y="90" width="52" height="90"></rect>
+      <rect x="660" y="50" width="32" height="130"></rect>
+      <rect x="702" y="78" width="44" height="102"></rect>
+      <rect x="756" y="65" width="26" height="115"></rect>
+      <rect x="792" y="40" width="38" height="140"></rect>
+      <rect x="840" y="80" width="30" height="100"></rect>
+      <rect x="880" y="60" width="20" height="120"></rect>
+    </svg>
+  </div>
+
+  <div class="why-us-cta-container">
+    <!-- Gold divider rule -->
+    <div class="why-us-cta-rule" aria-hidden="true">
+      <span class="why-us-cta-rule-line"></span>
+      <span class="why-us-cta-rule-diamond"></span>
+      <span class="why-us-cta-rule-line"></span>
+    </div>
+
+    <!-- Label -->
+    <p class="why-us-cta-label">READY TO BUILD YOUR DIGITAL LOCATION?</p>
+
+    <!-- Heading -->
+    <h2 class="why-us-cta-heading">Still Have Questions?<br>Let's Talk.</h2>
+
+    <!-- Body -->
+    <p class="why-us-cta-body">Our team is ready to walk you through every detail — from structure to strategy. Whether you're starting from scratch or upgrading an underperforming site, we'll help you claim your digital location and turn it into your most reliable source of leads, calls, and bookings.</p>
+
+    <!-- CTA Button -->
+    <a href="/contact" class="why-us-cta-btn">Start Building Your Digital Location</a>
+
+    <!-- Lot tag -->
+    <p class="why-us-cta-lot" aria-label="Section reference">LOT: WHY-US // CLOSING STATEMENT</p>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" aria-label="Site Footer"><div class="footer-top"><div class="footer-container"><div class="footer-grid"><div class="footer-col footer-col--brand"><a href="/" class="footer-logo-link" aria-label="Virtual Key Solutions Home"><img src="/assets/virtual-key-solutions-web-design-digital-marketing-logo.webp" alt="Virtual Key Solutions" class="logo"></a><p class="footer-tagline">We build digital infrastructure that unlocks growth — precision-crafted websites and marketing strategies for ambitious local businesses.</p><div class="footer-social" aria-label="Social Media Links"></div></div><div class="footer-col footer-col--links"><h3 class="footer-heading"><span class="footer-heading-accent"></span>Quick Links</h3><ul class="footer-nav" aria-label="Quick Links Navigation"><li><a href="/">Home</a></li><li><a href="/services">Services</a></li><li><a href="/why-us">Why Us</a></li><li><a href="/contact">Contact</a></li></ul></div><div class="footer-col footer-col--contact"><h3 class="footer-heading"><span class="footer-heading-accent"></span>Get In Touch</h3><ul class="footer-contact" aria-label="Contact Information"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div><div class="footer-col footer-col--badge"><h3 class="footer-heading"><span class="footer-heading-accent"></span>Why Choose Us</h3><div class="footer-badges"><div class="footer-badge"><span class="badge-icon"><i class="fas fa-key"></i></span><span class="badge-label">Premium Web Design</span></div><div class="footer-badge"><span class="badge-icon"><i class="fas fa-chart-line"></i></span><span class="badge-label">Growth-Driven Marketing</span></div><div class="footer-badge"><span class="badge-icon"><i class="fas fa-headset"></i></span><span class="badge-label">Dedicated Support</span></div><div class="footer-badge"><span class="badge-icon"><i class="fas fa-shield-alt"></i></span><span class="badge-label">Results Guaranteed</span></div></div></div></div></div></div><div class="footer-bottom"><div class="footer-container"><div class="footer-bottom-inner"><p class="footer-copyright">© 2026 Virtual Key Solutions. All rights reserved.</p><div class="footer-legal" aria-label="Legal Links"><a href="/privacy">Privacy Policy</a><span class="footer-legal-divider" aria-hidden="true">|</span><a href="/terms">Terms &amp; Conditions</a><span class="footer-legal-divider" aria-hidden="true">|</span><a href="/accessibility">Accessibility</a><span class="footer-legal-divider" aria-hidden="true">|</span><a href="https://zappy5.com" target="_blank" rel="noopener noreferrer" class="zappy-attribution">Generated by Zappy</a></div></div></div></div></footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(248,248,246,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main:not(.courses-page-main)>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>
